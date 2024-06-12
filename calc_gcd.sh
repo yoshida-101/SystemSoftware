@@ -1,41 +1,42 @@
 #!/bin/bash
 
-# Exit status is as follows:
-# 0: Normal exit
-# 1: Insufficient or excessive number of arguments
-# 2: Argument is not a natural number
-# 3: Argument exceeds the maximum value
+# 終了ステータスは以下の通りとする
+# 0: 正常終了
+# 1: 引数の数が2ではない
+# 2: 引数が自然数ではない
+# 3: 引数が整数の最大値を超えている
 
 CHECK_ARG_COUNT () {
     if [ $# -ne 2 ]; then
-        echo "Two arguments are required."
+        echo "引数を2つ入力してください"
         exit 1
     fi
 }
 
 
 CHECK_IS_NATURAL_NUMBER () {
-    # expr returns exit status 1 when the result is 0
-    # Returns exit status 2 if not a number   
+    # exprは解が0のときに終了ステータス1を返す
+    # exprは引数が整数でないときに終了ステータス2を返す
     expr $1 + 0 >/dev/null 2>&1
 
     if [ $? -ne 0 ]; then
-        echo "$1 is not a natural number."
+        echo "$1 は自然数ではありません"
         exit 2
-    # Check if exceeding the maximum value of an integer
-    # Check if it doesn't match as a string due to overflow
+    # 整数の最大値を超えているか確認する
+    # オーバーフローして文字列として一致しないことを確認する
     elif [ $(( $1 + 0 )) != $1 ]; then
-        echo "The argument exceeds the maximum value for an integer."
+        echo "整数の最大値を超えています"
         exit 3
-    # Check if it's a negative number
+    # 負の数か確認する
     elif [ $1 -lt 0 ]; then
-        echo "$1 is not a natural number."
+        echo "$1 は自然数ではありません"
         exit 2
     fi
 }
 
+
 CALCULATE_GREATEST_COMMON_DIVISOR () {
-    # Use Euclidean algorithm to find the greatest common divisor   
+    # ユークリッドの互除法で最大公約数を求める
     if [ $1 -ge $2 ]; then
         a=$1
         b=$2
@@ -44,7 +45,7 @@ CALCULATE_GREATEST_COMMON_DIVISOR () {
         b=$1
     fi
 
-    remainder=1 # Initial value
+    remainder=1 # 初期値
     while [ ${remainder} -gt 0 ]; do
         remainder=$(( ${a} % ${b} )) 
 
@@ -52,7 +53,7 @@ CALCULATE_GREATEST_COMMON_DIVISOR () {
         b=${remainder}
     done
 
-    echo "The greatest common divisor of $1 and $2 is $a."
+    echo "$1 と $2 の最大公約数は $a です"
 }
 
 # Main
